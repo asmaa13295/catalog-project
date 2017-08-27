@@ -1,0 +1,10 @@
+{% extends "main.html" %}
+{% block content %}
+                <form method="post" action="{{ url_for("addCategory") }}">
+                    <label class="h4">Name</label>
+                    <input type="text" class="form-control" placeholder="name" name="name">
+                    <input class="btn btn-default addbtn" type="submit" value="Add">
+					<a href="{{url_for('index')}}" class="btn btn-default addbtn">Cancel</a>
+                </form>
+				
+{% endblock %}

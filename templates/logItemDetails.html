@@ -1,0 +1,14 @@
+{% extends "main.html" %}
+{% block content %}
+		{% if item %}
+		<p class="h2">{{ item.name }} Details</p>
+		<p class="h4 text-justify">{{ item.description }} </br></p>
+		<p class="h4 text-justify">Price: {{ item.price }} </p>
+		
+		<a class="btn addbtn" href="{{url_for('editItem', cat_id=item.cat.id, item_id=item.id) }}" >Edite</a>
+		<a class="btn addbtn" href="{{url_for('deleteItem', cat_id=item.cat.id, item_id=item.id) }}" >Delete</a>
+		<a class="btn btn-default addbtn" href="{{url_for('showCategory', cat_id=cat_id)}}">Cancel</a>
+		{% else %}
+			{% include "error.html" %}
+		{% endif %}
+{% endblock %}

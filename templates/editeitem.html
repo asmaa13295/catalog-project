@@ -1,0 +1,21 @@
+{% extends "main.html" %}
+{% block content %}
+    {% if item %}
+                <form method="post", action="{{url_for('editItem', cat_id=item.cat.id, item_id=item.id)}}">
+                <label class="h4">Title</label>
+                <input type="text" class="form-control" placeholder="{{ item.name }}" name="name">
+                <label class="h4">Description</label>
+                <input type="text" class="form-control" placeholder="{{ item.description }}" name="description">
+				<label class="h4">Price</label>
+                <input type="text" class="form-control" placeholder="{{ item.price }}" name="price">
+                <input class="btn btn-default addbtn" type="submit" value="submit">
+				</form>
+				<a class="btn btn-default addbtn" href="{{url_for('showItem', cat_id=item.cat.id, item_id=item.id)}}" >Cancel</a>
+				
+
+    {% else %}
+         {% include "error.html" %}
+    {% endif %}
+
+
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "main.html" %}
+{% block content %}
+		{% if item %}
+		<p class="h2">{{ item.name }} Details</p>
+		<p class="h4 text-justify">{{ item.description }} </br></p>
+		<p class="h4 text-justify">Price: {{ item.price }} </p>
+		
+		{% else %}
+			{% include "error.html" %}
+		{% endif %}
+{% endblock %}

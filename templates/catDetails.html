@@ -1,0 +1,31 @@
+{% extends "main.html" %}
+{% block content %}
+
+    {% if mycat %}
+		<div class="col-md-3">
+			<p class="h2">Categories</p>
+			<ul class="list-unstyled h3 Lside">
+                {% for cat in cats %}
+                    {% if cat.name == mycat.name %}
+				       <li ><a href="{{url_for('showCategory', cat_id=cat.id) }}"><span class="redE">{{cat.name}}</span></a></li>
+                    {% else %}
+                        <li><a href="{{url_for('showCategory', cat_id=cat.id) }}">{{ cat.name }}</a></li>
+                    {% endif %}
+
+                {% endfor %}
+			</ul>
+		</div>
+		<div class="col-md-9 ">
+			<p class="h2">{{ mycat.name }} Items</p>
+			<ul class="list-unstyled h3">
+                {% for item in items %}
+                    <li><a href="{{url_for('showItem', cat_id=item.cat.id, item_id=item.id) }}">{{ item.name }}</a></li>
+                {% endfor %}
+			</ul>
+			
+		</div>
+
+	{% else %}
+     {% include "error.html" %}
+    {% endif %}
+{% endblock %}

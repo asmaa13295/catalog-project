@@ -1,0 +1,26 @@
+{% extends "main.html" %}
+{% block content %}
+		<div class="col-md-3">
+			<p class="h2">Categories</p>
+
+			<ul class="list-unstyled h3 Lside">
+				{% for cat in cats %}
+					<li><a href="{{url_for('showCategory', cat_id=cat.id) }}">{{ cat.name }}</a></li>
+				{% endfor %}
+			</ul>
+			<a class="btn addbtn add" href = "{{url_for('addCategory') }}" >Add Category</a>
+		</div>
+		<div class="col-md-9 ">
+			<p class="h2">Latest Items</p>
+			<ul class="list-unstyled h3">
+				{% for item in items %}
+					<li><a href="{{url_for('showItem', cat_id=item.cat.id, item_id=item.id) }}">{{item.name}} </a><span>({{item.cat.name}})</span></li>
+				{% endfor %}
+			</ul>
+		</div>
+		
+		
+{% endblock %}
+
+
+<!-- url_for('name of fun', ct_id=ct.id, ...) -->

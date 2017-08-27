@@ -1,0 +1,13 @@
+{% extends "main.html" %}
+{% block content %}
+                <form method="post" action="{{ url_for('addItem', cat_id=cat_id ) }}">
+                    <label class="h4">Title</label>
+                    <input type="text" class="form-control" placeholder="title" name="name">
+                    <label class="h4">Description</label>
+                    <input type="text" class="form-control" placeholder="description" name="description">
+					<label class="h4">Price</label>
+                    <input type="text" class="form-control" placeholder="price" name="price">
+                    <input class="btn btn-default addbtn" type="submit" value="Add">
+                </form>
+				<a class="btn btn-default addbtn" href="{{url_for('showCategory', cat_id=cat_id)}}">Cancel</a>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "main.html" %}
+{% block content %}
+		{% if item %}
+			<p class="h4"> Are you sure you want to delete
+					{{item.name}} ?
+			</p>
+			<form action="{{ url_for('deleteItem', cat_id=item.cat.id, item_id=item.id)}}", method="post">
+				<p class="h2">Delete Item</p>
+				<input class="btn btn-default addbtn" type="submit" value="Delete">
+			</form>
+			<a class="btn btn-default addbtn" href = "{{url_for('showItem', cat_id=item.cat.id, item_id=item.id)}}"> Cancel </a>
+		{% else %}
+			{% include "error.html " %}
+		{% endif %}
+
+	
+{% endblock %}
