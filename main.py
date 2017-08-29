@@ -12,6 +12,7 @@ from oauth2client.client import FlowExchangeError
 import httplib2
 import json
 from flask import make_response
+import requests
 
 
 app = Flask(__name__)
@@ -37,6 +38,7 @@ def login():
     login_session["state"] = state
     return render_template('login.html', STATE=state)
 
+
 # logout rout
 @app.route('/logout')
 def logout():
@@ -55,7 +57,6 @@ def logout():
     else:
         flash("please log in first")
         return redirect(url_for('index'))
-
 
 
 @app.route('/gconnect', methods=['POST'])
@@ -212,7 +213,6 @@ def Jgeneral():
     return jsonify(cats=[i.serialize for i in cats])
 
 
-
 @app.route('/categories/<int:cat_id>/JSON')
 def Jcats(cat_id):
     cats = session.query(Cat).filter_by(id=cat_id).one()
@@ -220,11 +220,10 @@ def Jcats(cat_id):
     return jsonify(items=[i.serialize for i in items])
 
 
-
 @app.route('/categories/<int:cat_id>/<int:item_id>/JSON')
 def Jitems(cat_id, item_id):
-    items = session.query(Item).filter_by(id = item_id).one()
-    return jsonify(items =[i.serialize for i in items])
+    items = session.query(Item).filter_by(id=item_id).one()
+    return jsonify(items=items.serialize)
 
 
 # show the home page
@@ -249,7 +248,8 @@ def showCategory(cat_id):
         cats = session.query(Cat).all()
         items = session.query(Item).filter_by(cat_id=cat_id)
         if 'username' not in login_session:
-            return render_template('catDetails.html', mycat=cat, cats=cats, items=items)
+            return render_template(
+                'catDetails.html', mycat=cat, cats=cats, items=items)
         else:
             return render_template(
                 'logCatDetails.html', mycat=cat, cats=cats, items=items)
@@ -263,7 +263,8 @@ def showItem(cat_id, item_id):
     if 'username' not in login_session:
         return render_template('itemDetails.html', item=my_item, cat_id=cat_id)
     else:
-        return render_template('logItemDetails.html', item=my_item, cat_id=cat_id)
+        return render_template(
+            'logItemDetails.html', item=my_item, cat_id=cat_id)
 
 
 # add new category
@@ -300,8 +301,10 @@ def addItem(cat_id):
     if request.method == "POST":
         newItem = Item(
             name=request.form['name'],
+            user_id=login_session['user_id']
             description=request.form['description'],
-            price=request.form['price'])
+            price=request.form['price']
+            cat_id=cat_id)
         session.add(newItem)
         session.commit()
         flash("item is added successfully")
@@ -318,6 +321,8 @@ def editItem(cat_id, item_id):
     if 'username' not in login_session:
         return redirect('/login')
     editedItem = session.query(Item).filter_by(id=item_id, cat_id=cat_id).one()
+    if editedItem.user_id != login_session['user_id']:
+        return "<script>function myFunction() {alert( 'You are not authorized to edit this restaurant./Please create your own restaurant in order to edit.');}</script><body onload='myFunction()''>"
     if request.method == 'POST':
             if request.form['name']:
                 print "name"
@@ -337,7 +342,6 @@ def editItem(cat_id, item_id):
             'editeitem.html', cat_id=cat_id, item=editedItem)
 
 
-
 # delete item
 
 @app.route('/categories/<int:cat_id>/<int:item_id>/delete',
@@ -346,6 +350,8 @@ def deleteItem(cat_id, item_id):
     if 'username' not in login_session:
         return redirect('/login')
     deletedItem = session.query(Item).filter_by(id=item_id).one()
+    if editedItem.user_id != login_session['user_id']:
+        return "<script>function myFunction() {alert('You are not authorized to edit this restaurant. Please create your own restaurant in order to edit.');}</script><body onload='myFunction()''>"
     if request.method == 'GET':
         return render_template('deleteItem.html', item=deletedItem)
     else:
@@ -357,4 +363,5 @@ def deleteItem(cat_id, item_id):
 
 if __name__ == "__main__":
     app.secret_key = "ThisISSECRET"
-    app.run(port=5001, host="localhost")
+    app.debug = True
+    app.run(port=5001, host="0.0.0.0")
