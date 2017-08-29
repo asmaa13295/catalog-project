@@ -301,7 +301,7 @@ def addItem(cat_id):
     if request.method == "POST":
         newItem = Item(
             name=request.form['name'],
-            user_id=login_session['user_id']
+            user_id=login_session['user_id'],
             description=request.form['description'],
             price=request.form['price']
             cat_id=cat_id)
