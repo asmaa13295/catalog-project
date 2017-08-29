@@ -303,7 +303,7 @@ def addItem(cat_id):
             name=request.form['name'],
             user_id=login_session['user_id'],
             description=request.form['description'],
-            price=request.form['price']
+            price=request.form['price'],
             cat_id=cat_id)
         session.add(newItem)
         session.commit()
