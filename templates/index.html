@@ -16,11 +16,10 @@
 				{% for item in items %}
 					<li><a href="{{url_for('showItem', cat_id=item.cat.id, item_id=item.id) }}">{{item.name}} </a><span>({{item.cat.name}})</span></li>
 				{% endfor %}
+				
 			</ul>
+			
 		</div>
 		
 		
 {% endblock %}
-
-
-<!-- url_for('name of fun', ct_id=ct.id, ...) -->
