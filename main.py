@@ -32,6 +32,7 @@ session = DBSession()
 
 @app.route('/login')
 def login():
+    # store the details of login session
     state = ''.join(random.choice(
         string.ascii_uppercase+string.digits
         )for x in xrange(32))
@@ -149,6 +150,7 @@ def gconnect():
 
 
 # User Helper Functions
+# fun to create user
 def createUser(login_session):
     newUser = User(name=login_session['username'], email=login_session[
                    'email'])
@@ -158,11 +160,12 @@ def createUser(login_session):
     return user.id
 
 
+# fun to get user information
 def getUserInfo(user_id):
     user = session.query(User).filter_by(id=user_id).one()
     return user
 
-
+# function to get user ID
 def getUserID(email):
     try:
         user = session.query(User).filter_by(email=email).one()
@@ -173,6 +176,7 @@ def getUserID(email):
 
 # DISCONNECT - Revoke a current user's token and reset their login_session
 @app.route('/gdisconnect')
+# disconnect and removing the user information from the session
 def gdisconnect():
     access_token = login_session.get('access_token')
     if access_token is None:
@@ -271,6 +275,7 @@ def showItem(cat_id, item_id):
 
 @app.route('/categories/add', methods={"GET", "POST"})
 def addCategory():
+    # check whether the user id logged in or not 
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == "GET":
@@ -296,6 +301,7 @@ def addCategory():
 # add new item
 @app.route('/categories/<int:cat_id>/add', methods={"GET", "POST"})
 def addItem(cat_id):
+    # check whether the user id logged in or not
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == "POST":
@@ -318,6 +324,7 @@ def addItem(cat_id):
 @app.route('/categories/<int:cat_id>/<int:item_id>/edit',
            methods=['GET', 'POST'])
 def editItem(cat_id, item_id):
+    # check whether the user id logged in or not
     if 'username' not in login_session:
         return redirect('/login')
     editedItem = session.query(Item).filter_by(id=item_id, cat_id=cat_id).one_or_none()
@@ -348,9 +355,11 @@ def editItem(cat_id, item_id):
 @app.route('/categories/<int:cat_id>/<int:item_id>/delete',
            methods=['GET', 'POST'])
 def deleteItem(cat_id, item_id):
+    # check whether the user id logged in or not
     if 'username' not in login_session:
         return redirect('/login')
     deletedItem = session.query(Item).filter_by(id=item_id).one()
+    # check whether the user is the owner of the deleted item or not
     if editedItem.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('You are not authorized to edit this restaurant. Please create your own restaurant in order to edit.');}</script><body onload='myFunction()''>"
     if request.method == 'GET':
